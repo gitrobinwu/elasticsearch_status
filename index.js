@@ -1,6 +1,18 @@
 import api from './server/routes';
 
 export default function (kibana) {
+  //查看autoload目录是否定义
+  var mainFile = 'plugins/elasticsearch_status/app';
+
+  var ownDescriptor = Object.getOwnPropertyDescriptor(kibana, 'autoload');
+  var protoDescriptor = Object.getOwnPropertyDescriptor(kibana.constructor.prototype, 'autoload');
+  var descriptor = ownDescriptor || protoDescriptor || {};
+  if (descriptor.get) {
+    // the autoload list has been replaced with a getter that complains about
+    // improper access, bypass that getter by seeing if it is defined
+    mainFile = 'plugins/elasticsearch_status/app_with_autoload';
+  }
+
   return new kibana.Plugin({
     require: ['elasticsearch'],
 
@@ -9,10 +21,12 @@ export default function (kibana) {
       app: {
         // The title of the app (will be shown to the user)
         title: 'Indices',
+		hidden: true,
         // An description of the application.
         description: 'An awesome Kibana plugin',
         // The require reference to the JavaScript file for this app
-        main: 'plugins/elasticsearch_status/app',
+        //main: 'plugins/elasticsearch_status/app',
+		main: mainFile,
         // The require reference to the icon of the app
         icon: 'plugins/elasticsearch_status/icon.svg'
       }

@@ -1,12 +1,110 @@
-<div class="container">
-  <div class="row">
-    <div class="col-12-sm">
-      <h1>Elasticsearch Status</h1>
-      <ul class="indexList">
-        <li ng-repeat="index in ctrl.indices">
-          <a href="#/index/{{index}}">{{ index }}</a>
-        </li>
-      </ul>
-    </div>
-  </div>
+<div style="margin-top: 10px">
+	<span style="padding-left: 10px">
+		<a href="http://180.153.64.131:5601/app/kibana">返回主页</a>
+	</span>	
 </div>
+
+<div class="container">
+	<h2 style="margin-bottom: 25px">索引管理</h2>
+	<!-------------------------------------------------------->
+	<div class="row" style="padding-bottom: 20px">
+		<!--nodes-->
+		<div class="col-lg-5ths col-md-3 col-sm-6 col-xs-12">
+			<div class="stat-block bordered">
+				<span>
+					<span class="cluster-map-stat-number" ng-bind="nodesCount"></span>
+					<span class="cluster-map-stat-description">nodes</span>
+				</span>
+			</div>
+		</div>
+		<!--indices-->
+		<div class="col-lg-5ths col-md-3 col-sm-6 col-xs-12">
+			<div class="stat-block bordered">
+				<span>
+					<span class="cluster-map-stat-number" ng-bind="indicesCount"></span>
+					<span class="cluster-map-stat-description">indices</span>
+				</span>
+			</div>
+		</div>
+		<!--shards-->
+		<div class="col-lg-5ths col-md-3 col-sm-6 col-xs-12">
+			<div class="stat-block bordered">
+				<span>
+					<span class="cluster-map-stat-number" ng-bind="shardsCount"></span>
+					<span class="cluster-map-stat-description">shards</span>
+				</span>
+			</div>
+		</div>
+		<!--docs-->
+		<div class="col-lg-5ths col-md-3 col-sm-6 col-xs-12">
+			<div class="stat-block bordered">
+				<span>
+					<span class="cluster-map-stat-number" ng-bind="docsCount"></span>
+					<span class="cluster-map-stat-description">docs</span>
+				</span>
+			</div>
+		</div>
+		<!--size-->
+		<div class="col-lg-5ths col-md-3 col-sm-6 col-xs-12">
+			<div class="stat-block bordered">
+				<span>
+					<span class="cluster-map-stat-number" ng-bind="storeSize"></span>
+				</span>
+			</div>
+		</div>
+	</div>	
+	<!-------------------------------------------------------->
+	<!-- search and table -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="row col-lg-4 col-sm-6 cluster-overview-filter">
+				<input ng-model="query" class="form-control input-sm ng-pristine ng-valid ng-touched" placeholder="filter indices by name" type="text" ng-change="search(query)">
+			</div>
+		</div>
+	</div>
+	<!-------------------------------------------------------->
+	<!--table -->
+	<div class="row">
+		<div class="col-lg-12">
+			<table class="table table-hover table-bordered table-condensed">
+				<thread>
+					<tr>
+						<th>索引名称</th>
+						<th>文档数量</th>
+						<th>索引大小</th>
+					</tr>
+				</thread>
+				<tbody>
+					<tr ng-repeat="line in items | orderBy : 'name'">
+						<td><a href="#/index/{{line.name}}" ng-bind="line.name"></a></td>
+						<td ng-bind="line.count"></td>
+						<td ng-bind="line.size"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+    </div>
+	
+	<!-- set page -->
+	<div class="row pull-right">
+		<nav>
+			<ul class="pagination">
+				<li>
+					<a ng-click="Previous()">
+						<span>上一页</span>
+					</a>
+				</li>
+				<li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}">
+					<a ng-click="selectPage(page)" ng-bind="page"></a>
+				</li>
+				<li>
+					<a ng-click="Next()">
+						<span>下一页</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>
+
+
